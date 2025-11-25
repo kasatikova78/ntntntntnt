@@ -24,7 +24,11 @@ internal class HLSExtractor : IExtractor
     public int last_msn;
     public int last_part;
     public Dictionary<int, int> msn_max_part_dict;
-    Dictionary<string, string> ih = new Dictionary<string, string> { { "Zokee2OhPh9kugh4", "Quean4cai9boJa5a" } };
+    Dictionary<string, string> ih = new Dictionary<string, string>
+    {
+        { "Zokee2OhPh9kugh4", "Quean4cai9boJa5a" },
+        { "Zeechoej4aleeshi", "ubahjae7goPoodi6" }
+    };
 
     public HLSExtractor(ParserConfig parserConfig)
     {
