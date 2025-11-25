@@ -24,6 +24,8 @@ internal class HLSExtractor : IExtractor
     public int last_msn;
     public int last_part;
     public Dictionary<int, int> msn_max_part_dict;
+    //Chrome Ctrl+Shift+F 搜索关键字 playlistDecryptHandler 和 MOUFLON，在可疑的地方console.log()或者下断点
+    //平台有多个播放器，如果这个房间没有触发逻辑就多试几个房间，断到了playlistDecryptHandler后就查看变量，key就在里面
     Dictionary<string, string> ih = new Dictionary<string, string>
     {
         { "Zokee2OhPh9kugh4", "Quean4cai9boJa5a" },
