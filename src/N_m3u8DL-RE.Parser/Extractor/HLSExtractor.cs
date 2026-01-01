@@ -26,12 +26,10 @@ internal class HLSExtractor : IExtractor
     public Dictionary<int, int> msn_max_part_dict;
     //Chrome Ctrl+Shift+F 搜索关键字 playlistDecryptHandler 和 MOUFLON，在可疑的地方console.log()或者下断点(Source Overrides 替换js文件内容)
     //平台有多个播放器，如果这个房间没有触发逻辑就多试几个房间，断到了playlistDecryptHandler后就查看变量，key就在里面
-    //chunk-fb8457ec7ca0302d78a3.js 搜索 this._playlistDecryptHandler = n，下断点，断到之后看右边的this._playlistDecryptHandler._knownKeyIds和this._playlistDecryptHandler._knownKeys
     Dictionary<string, string> ih = new Dictionary<string, string>
     {
         { "Zokee2OhPh9kugh4", "Quean4cai9boJa5a" },
-        { "Zeechoej4aleeshi", "ubahjae7goPoodi6" },
-        { "Ook7quaiNgiyuhai", "ubahjae7goPoodi6" }//听说是故意加进来混淆的，正确的还是用Zeechoej4aleeshi去解密
+        { "Zeechoej4aleeshi", "ubahjae7goPoodi6" }
     };
 
     public HLSExtractor(ParserConfig parserConfig)
@@ -675,7 +673,6 @@ internal class HLSExtractor : IExtractor
     private async Task RefreshUrlFromMaster(List<StreamSpec> lists)
     {
         // 重新加载master m3u8, 刷新选中流的URL
-        string fixed_url = DowngradeUrl(ParserConfig.Url);
         await LoadM3u8FromUrlAsync(ParserConfig.Url);
         var newStreams = await ParseMasterListAsync();
         newStreams = newStreams.DistinctBy(p => p.Url).ToList();
@@ -689,15 +686,6 @@ internal class HLSExtractor : IExtractor
         }
     }
 
-    private static string DowngradeUrl(string url)
-    {
-        if (url.Contains("psch=v2"))
-            url = url.Replace("psch=v2", "psch=v1");
-        if (url.Contains("Ook7quaiNgiyuhai"))
-            url = url.Replace("Ook7quaiNgiyuhai", "Zeechoej4aleeshi");
-        return url;
-    }
-
     public async Task FetchPlayListAsync(List<StreamSpec> lists)
     {
         for (int i = 0; i < lists.Count; i++)
@@ -705,14 +693,14 @@ internal class HLSExtractor : IExtractor
             try
             {
                 // 直接重新加载m3u8
-                await LoadM3u8FromUrlAsync(DowngradeUrl(lists[i].Url!));
+                await LoadM3u8FromUrlAsync(lists[i].Url!);
             }
             catch (HttpRequestException) when (MasterM3u8Flag)
             {
                 Logger.WarnMarkUp("Can not load m3u8. Try refreshing url from master url...");
                 // 当前URL无法加载 尝试从Master链接中刷新URL
                 await RefreshUrlFromMaster(lists);
-                await LoadM3u8FromUrlAsync(DowngradeUrl(lists[i].Url!));
+                await LoadM3u8FromUrlAsync(lists[i].Url!);
             }
 
             var newPlaylist = await ParseListAsync();
